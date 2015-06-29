@@ -9,11 +9,17 @@ http://naturalcapitalproject.org/ to be updated to the tip revision of the
 webpage repository.
 """
 
+import cgitb
 import os
 import json
 import time
 import sys
 import subprocess
+
+cgitb.enable(display=0, logdir=".")
+
+print "Content-Type: text/html" # HTML is following
+print # blank line, end of headers
 
 REPOSITORY_PATH = 'https://bitbucket.org/natcap/invest-natcap.webpage'
 REPOSITORY_DIR = os.path.expanduser('~/invest-natcap.webpage/')
