@@ -20,7 +20,7 @@ with open('webpage-hook.log', 'a') as LOG_FILE:
     NULL_FH = open("NUL", "w")
     try:
         HOOK_DATA = json.loads(sys.stdin.read())
-        LOG_FILE.write("New hook data: %s" % json.dumps(HOOK_DATA, indent=4, sort_keys=True))
+        LOG_FILE.write("New hook data: %s\n" % json.dumps(HOOK_DATA, indent=4, sort_keys=True))
 
     except Exception as exception:
         LOG_FILE.write(
