@@ -33,8 +33,10 @@ with open('webpage-hook.log', 'a') as LOG_FILE:
                     ["hg", "clone", REPOSITORY_PATH, REPOSITORY_DIR],
                     stdout=NULL_FH, stderr=NULL_FH)
             else:
+                # making explicit call to bitbucket path (set in REPO/.hg/hgrc)
+                # for now.
                 subprocess.call(
-                    ["hg", "pull", "--repository", REPOSITORY_DIR],
+                    ["hg", "pull", "bitbucket", "--repository", REPOSITORY_DIR],
                     stdout=NULL_FH, stderr=NULL_FH)
             subprocess.call(
                 ["hg", "up", "-C", "--repository", REPOSITORY_DIR],
