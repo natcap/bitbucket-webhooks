@@ -13,6 +13,7 @@ import os
 import json
 import time
 import sys
+import subprocess
 
 REPOSITORY_PATH = 'https://bitbucket.org/natcap/invest-natcap.webpage'
 REPOSITORY_DIR = os.path.expanduser('~/invest-natcap.webpage/')
@@ -20,7 +21,22 @@ with open('webpage-hook.log', 'a') as LOG_FILE:
     NULL_FH = open("NUL", "w")
     try:
         HOOK_DATA = json.loads(sys.stdin.read())
-        LOG_FILE.write("New hook data: %s\n" % json.dumps(HOOK_DATA, indent=4, sort_keys=True))
+        if HOOK_DATA['repository']['links']['html']['href'] == REPOSITORY_PATH:
+            if not os.path.isdir(REPOSITORY_DIR):
+                subprocess.call(
+                    ["hg", "clone", REPOSITORY_PATH, REPOSITORY_DIR],
+                    stdout=NULL_FH, stderr=NULL_FH)
+            else:
+                subprocess.call(
+                    ["hg", "pull", "--repository", REPOSITORY_DIR],
+                    stdout=NULL_FH, stderr=NULL_FH)
+            subprocess.call(
+                ["hg", "up", "-C", "--repository", REPOSITORY_DIR],
+                stdout=NULL_FH, stderr=NULL_FH)
+            subprocess.call(
+                [os.path.join(REPOSITORY_DIR, "sync.sh")],
+                stdout=NULL_FH, stderr=NULL_FH)
+            LOG_FILE.write("[%s] successfuly updated\n" % time.strftime("%c"))
 
     except Exception as exception:
         LOG_FILE.write(
